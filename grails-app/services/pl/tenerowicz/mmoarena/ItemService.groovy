@@ -5,6 +5,9 @@ import pl.tenerowicz.mmoarena.exception.NotEnoughCoinsException
 
 @Transactional
 class ItemService {
+
+	def springSecurityService
+
     def sellItem(Item item) {
 		Player character = getCurrentPlayer()
 		character.coins += item.coinCost

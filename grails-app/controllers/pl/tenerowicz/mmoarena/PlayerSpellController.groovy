@@ -1,5 +1,6 @@
 package pl.tenerowicz.mmoarena
 
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 import org.springframework.security.access.annotation.Secured
@@ -18,6 +19,16 @@ class PlayerSpellController {
         return[equipedSpells: equipedSpells, unequipedSpells: unequipedSpells, allSpells: allSpells]
     }
 
+    def indexJson() {
+        List<SpellPossession> equipedSpells = SpellPossession.findAllByIsEquipedAndSpellOwner(true, getCurrentPlayer() )
+                                                             .collect { poss -> poss.spell }
+        List<SpellPossession> unequipedSpells = SpellPossession.findAllByIsEquipedAndSpellOwner(false, getCurrentPlayer() )
+                                                               .collect { poss -> poss.spell }
+        List<Spell> otherSpells = Spell.notPossessed(getCurrentPlayer())
+
+        render(["equipedSpells": equipedSpells, "unequipedSpells": unequipedSpells, "otherSpells": otherSpells] as JSON)
+    }
+
     def equip(SpellPossession spellPossession) {
         spellPossession.equip()
         redirect(action: "index")
@@ -26,6 +37,16 @@ class PlayerSpellController {
     def unequip(SpellPossession spellPossession) {
         spellPossession.unequip()
         redirect(action: "index")
+    }
+
+    def equipJson(Spell spell) {
+        SpellPossession.findBySpellAndSpellOwner(spell, getCurrentPlayer()).equip()
+        render status: 200
+    }
+
+    def unequipJson(Spell spell) {
+        SpellPossession.findBySpellAndSpellOwner(spell, getCurrentPlayer()).unequip()
+        render status: 200
     }
 
     @Transactional

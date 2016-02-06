@@ -16,4 +16,12 @@ class Spell {
     static List getStartingSpells() {
         return Spell.findAllByRequiredLevel(1)
     }
+
+    static List<Item> notPossessed(Player player) {
+        def possessedSpellIds = SpellPossession.findAllBySpellOwner(player).collect { poss -> poss.spell.id }
+        def c = Spell.createCriteria();
+        return c.list {
+            not {'in'("id", possessedSpellIds)}
+        }
+    }
 }

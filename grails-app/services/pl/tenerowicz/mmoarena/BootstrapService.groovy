@@ -60,5 +60,18 @@ class BootstrapService {
         if( !enemy1 ) {
             Player.createCharacter('Enemy1', account2)
         }
+
+        if( !Item.findByName('Simple sword') ) {
+            Item item = new Item(name: 'Simple sword', attackBonus: 1L, defenceBonus: 0L, coinCost: 10L, requiredLevel: 1L)
+            item.save()
+        }
+        if( !Item.findByName('Better sword') ) {
+            Item item = new Item(name: 'Better sword', attackBonus: 2L, defenceBonus: 0L, coinCost: 20L, requiredLevel: 1L)
+            item.save()
+        }
+        if( !Item.findByName('Even better sword') ) {
+            Item item = new Item(name: 'Even better sword', attackBonus: 3L, defenceBonus: 0L, coinCost: 30L, requiredLevel: 1L)
+            item.save()
+        }
     }
 }

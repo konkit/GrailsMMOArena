@@ -18,13 +18,12 @@
             url: "getPlayerDataJson"
         }).done(function(data) {
             playerData = data;
-
-//                requestFight(playerData.id);
+            requestFight(playerData.id);
         });
 
 
 
-        var socket = io.connect('http://107.155.108.250:5000');
+        var socket = io.connect('http://127.0.0.1:5000');
 
         socket.on('message', function(data){
             console.log(data.message);

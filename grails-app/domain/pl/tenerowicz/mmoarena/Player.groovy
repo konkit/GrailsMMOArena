@@ -36,6 +36,14 @@ class Player {
 		return ItemPossession.findAllByItemOwnerAndIsEquiped(this, false)
 	}
 
+    def getEquipedSpells() {
+        return SpellPossession.findAllBySpellOwnerAndIsEquiped(this, true)
+    }
+
+    def getUnequipedSpells() {
+        return SpellPossession.findAllBySpellOwnerAndIsEquiped(this, false)
+    }
+
     static def createCharacter(String name, Account account) {
         Player.withTransaction {
             Player ch = new Player(

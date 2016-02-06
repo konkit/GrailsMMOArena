@@ -150,5 +150,6 @@ grails:
           access: ['permitAll']
         - pattern: '/**/favicon.ico'
           access: ['permitAll']
-
-
+    filterChain.chainMap:
+      - {pattern: /api/**, filters: 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter'}
+      - {pattern: /**, filters: 'JOINED_FILTERS,-restTokenValidationFilter,-restExceptionTranslationFilter'}

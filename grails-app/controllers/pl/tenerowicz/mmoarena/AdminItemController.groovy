@@ -12,11 +12,11 @@ class AdminItemController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond(Item.list(params), model:[itemInstanceCount: Item.count()])
+        return [itemInstanceList: Item.list(params), itemInstanceCount: Item.count()]
     }
 
     def create() {
-        respond new Item(params)
+        return [itemInstance: new Item(params)]
     }
 
     @Transactional
@@ -32,18 +32,12 @@ class AdminItemController {
         }
 
         itemInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'item.label', default: 'Item'), itemInstance.id])
-                redirect(action: "index")
-            }
-            '*' { respond itemInstance, [status: CREATED] }
-        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'item.label', default: 'Item'), itemInstance.id])
+        redirect(action: "index")
     }
 
     def edit(Item itemInstance) {
-        respond itemInstance
+        return [itemInstance: itemInstance]
     }
 
     @Transactional
@@ -61,14 +55,8 @@ class AdminItemController {
         }
 
         itemInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Item.label', default: 'Item'), itemInstance.id])
-                redirect(action: "index")
-            }
-            '*'{ respond itemInstance, [status: OK] }
-        }
+        flash.message = message(code: 'default.updated.message', args: [message(code: 'Item.label', default: 'Item'), itemInstance.id])
+        redirect(action: "index")
     }
 
     @Transactional
@@ -80,23 +68,12 @@ class AdminItemController {
         }
 
         itemInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Item.label', default: 'Item'), itemInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'Item.label', default: 'Item'), itemInstance.id])
+        redirect action:"index", method:"GET"
     }
 
     protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'item.label', default: 'Item'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'item.label', default: 'Item'), params.id])
+        redirect action: "index", method: "GET"
     }
 }
